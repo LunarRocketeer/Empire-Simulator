@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2042
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "EmpireSim", "EmpireSim\EmpireSim.pyproj", "{5EA31DF1-A312-4DFA-9C15-381D70F22FA3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5EA31DF1-A312-4DFA-9C15-381D70F22FA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EA31DF1-A312-4DFA-9C15-381D70F22FA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2BF43228-C50C-4342-BCF3-D1289F7A5446}
+	EndGlobalSection
+EndGlobal
