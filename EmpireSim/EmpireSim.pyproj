@@ -21,12 +21,6 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Asset.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Empire.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="EmpireSim.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
