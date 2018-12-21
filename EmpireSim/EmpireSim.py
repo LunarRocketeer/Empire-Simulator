@@ -17,12 +17,10 @@ class Asset:
 class Empire:
     """Stores data about each Empire"""
 
-    #TODO: remove initial HP?
-    def __init__(self, name="name", assets = [], affinities=[], initHp=0, initStrength=0, initCunning=0, credits=0):
+    def __init__(self, name="name", assets = [], affinities=[], initStrength=0, initCunning=0, credits=0):
         self.name = name #empire name
         self.assets = assets #array of Empire's assets 
         self.afinities = affinities #array of Empire's relationship with other empires
-        self.hp = initHp #base hp, to be added to hp of all assets
         self.strength = initStrength #base strength, to be added to strength of all assets
         self.cunning = initCunning #base cunning, to be added to strength of all assets
         self.credits = credits #Empire's money
@@ -64,9 +62,9 @@ class Empire:
 
     #Sums the hp of all assets, and adds initial hp
     def getHp(self):
-        hp = self.hp
+        hp = 0
         for a in self.assets:
-            hp = a.hp
+            hp += a.hp
         return hp
 
     #Adds or removes credits from Empire's coffers
