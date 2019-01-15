@@ -2,7 +2,7 @@ class Asset:
     """Things that empires own, be they places, objects, armies, etc.  Sum up to Empire's score in different categories"""
 
     
-    def __init__(self, name="name", type="none", strength=0, defense=0, hp=0, cunning=0, upkeep=0, cost=0, importance=0):
+    def __init__(self, name="newAsset", type="none", strength=0, defense=0, hp=0, cunning=0, upkeep=0, cost=0, importance=0):
         self.name = name #objects name
         self.type = type #place, person, object, army
         self.strength = strength #attack points
@@ -17,7 +17,7 @@ class Asset:
 class Empire:
     """Stores data about each Empire"""
 
-    def __init__(self, name="name", assets = [], affinities=[], initStrength=0, initCunning=0, credits=0):
+    def __init__(self, name="newFaction", assets=[], affinities=[], initStrength=0, initCunning=0, credits=0):
         self.name = name #empire name
         self.assets = assets #array of Empire's assets 
         self.afinities = affinities #array of Empire's relationship with other empires
@@ -27,9 +27,9 @@ class Empire:
 
         #decides if empire is bankrupt
         if (credits <= 0):
-            self.bankrupt = True;
+            self.bankrupt = True
         else:
-            self.bankrupt = False;
+            self.bankrupt = False
 
     #Adds a new asset to the asset array
     def addAsset(self, newAsset):
@@ -72,9 +72,9 @@ class Empire:
     def changeCredits(self, netCreds = 0):
         creds = self.credits + netCreds
         if (creds <= 0):
-            self.bankrupt = True;
+            self.bankrupt = True
         else:
-            self.bankrupt = False;
+            self.bankrupt = False
     
     #Changes an Empire's credits based on the upkeep of its assets        
     def runUpkeep(self):
@@ -83,7 +83,17 @@ class Empire:
     #Returns true if total credits is equal to or less than 0
     def isBankrupt(self):
         return self.bankrupt
-        
+
+class World:
+    """Stores Empires, Assets, and other stats for a game."""
+
+    def ___init___(self, name="newWorld", worldTension=0, empires=[], assets=[]):
+        self.turnCount = 0 #sets the gamee's time counter to zero
+        self.name = name #sets the world name
+        self.worldTension = worldTension #events that are allowed to happen adapt with rising world tension
+        self.empires = empires #stores the array of factions
+        self.assets = assets #stores the array of assets
+
 humanEmpire = Empire("Human Conglomerate",[],[], 50, 50, 50, 10)
 humanEmpire.addAsset(Asset("Well of Eternity", "location",50,50,50,50,50,50))
 humanEmpire.addAsset(Asset("Marshall Fedder", "army", 50))
