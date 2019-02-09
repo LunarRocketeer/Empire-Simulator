@@ -94,7 +94,9 @@ class World:
         self.empires = empires #stores the array of factions
         self.assets = assets #stores the array of assets
 
-humanEmpire = Empire("Human Conglomerate",[],[], 50, 50, 50, 10)
+import sys
+
+humanEmpire = Empire("Human Conglomerate",[],[], 50, 50, 10)
 humanEmpire.addAsset(Asset("Well of Eternity", "location",50,50,50,50,50,50))
 humanEmpire.addAsset(Asset("Marshall Fedder", "army", 50))
 humanEmpire.addAsset(Asset("Sword of the Well of Eternity","object", 50))
@@ -103,6 +105,34 @@ humanEmpire.addAsset(Asset("Sword of the Well of Eternity","object", 50))
 print(humanEmpire.getAssetSummaryString())
 print("Human Empire Strength: " + str(humanEmpire.getStrength()))
 print("Human Empire Credits: " + str(humanEmpire.credits))
-humanEmpire.runUpkeep();
+humanEmpire.runUpkeep()
 if (humanEmpire.isBankrupt()):
     print("Human Empire is bankrupt!")
+
+def newWorld():
+    print("Creating new world...")
+
+def loadWorld():
+    print("Loading new world...")
+
+menu = True
+while(menu):
+    print("Hello, welcome to Empire Builder.  Please enter input.")
+    print("1. New World")
+    print("2. Load World")
+    print("3. Quit")
+
+    inp = input();
+    if inp == "1":
+        menu = False
+        newWorld()
+    elif inp == "2":
+        loadWorld()
+        menu = False
+    elif inp == "3":
+        print("Have a lovely day!")
+        menu = False
+        sys.exit()
+    else:
+        print("Invalid input.")
+
