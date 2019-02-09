@@ -87,7 +87,7 @@ class Empire:
 class World:
     """Stores Empires, Assets, and other stats for a game."""
 
-    def ___init___(self, name="newWorld", worldTension=0, empires=[], assets=[]):
+    def __init__(self, name="newWorld", worldTension=0, empires=[], assets=[]):
         self.turnCount = 0 #sets the gamee's time counter to zero
         self.name = name #sets the world name
         self.worldTension = worldTension #events that are allowed to happen adapt with rising world tension
@@ -95,6 +95,8 @@ class World:
         self.assets = assets #stores the array of assets
 
 import sys
+import csv
+world = World()
 
 humanEmpire = Empire("Human Conglomerate",[],[], 50, 50, 10)
 humanEmpire.addAsset(Asset("Well of Eternity", "location",50,50,50,50,50,50))
@@ -113,7 +115,25 @@ def newWorld():
     print("Creating new world...")
 
 def loadWorld():
-    print("Loading new world...")
+    print("Choose your world:")
+    import os
+    f = os.listdir()
+    worlds = []
+    for files in f:
+        if (files.lower().endswith(".csv")):
+            worlds.append(files)
+    for ind, w in enumerate(worlds):
+        print(str(ind) + ". " + w.upper()[0:-4])
+    menu = True
+    while(menu):
+        inp = input()
+        if int(inp) >= 0 and int(inp) <= len(worlds):
+            file = worlds[int(inp)][0:-4].upper()
+            world = World(file)
+            menu = False
+        else:
+            print("Please enter valid input.")
+    print("World name: " + world.name)
 
 menu = True
 while(menu):
@@ -122,7 +142,7 @@ while(menu):
     print("2. Load World")
     print("3. Quit")
 
-    inp = input();
+    inp = input()
     if inp == "1":
         menu = False
         newWorld()
