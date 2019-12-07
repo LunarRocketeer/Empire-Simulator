@@ -88,17 +88,22 @@ class Empire:
 class World:
     """Stores Empires, Assets, and other stats for a game."""
 
-    def __init__(self, name="newWorld", worldTension=0, empires=[], assets=[], turnCount = 0):
-        self.turnCount = turnCount #sets the gamee's time counter
+    def __init__(self, fileName = "file.csv", name="newWorld", worldTension=0, empires=[], assets=[], turnCount = 0):
+        self.fileName = fileName #the name the file will be saved as
         self.name = name #sets the world name
+        self.turnCount = turnCount #sets the gamee's time counter
         self.worldTension = worldTension #events that are allowed to happen adapt with rising world tension
         self.empires = empires #stores the array of factions
         self.assets = assets #stores the array of assets
 
 import sys
 import csv
-world = World()
+import os
+world = World() #the world that will be used for the game
+path = "" #file path for saved csv
+file = "" #file name
 
+"""testing: 
 humanEmpire = Empire("Human Conglomerate",[],[], 50, 50, 10)
 humanEmpire.addAsset(Asset("Well of Eternity", "location",50,50,50,50,50,50))
 humanEmpire.addAsset(Asset("Marshall Fedder", "army", 50))
@@ -111,15 +116,18 @@ print("Human Empire Credits: " + str(humanEmpire.credits))
 humanEmpire.runUpkeep()
 if (humanEmpire.isBankrupt()):
     print("Human Empire is bankrupt!")
+"""
 
 def newWorld():
     print("Creating new world...")
 
 """Allows user to choose a .csv file, which is parsed and loaded into a World object"""
 def loadWorld():
+    global file
+    global world
+    global path
     print("Choose your world:")
     ##Gets list of files in local directory, filters out non csvs and inserts into list
-    import os
     f = os.listdir()
     worlds = ["GO BACK    "]
     for files in f:
@@ -131,57 +139,73 @@ def loadWorld():
         print(str(ind) + ". " + w.upper()[0:-4])
 
     #prompts user for input
-    menu = True
-    file = 0
-    world = 0
-    while(menu):
+    loadMenu = True
+    while(loadMenu):
         inp = input()
         try:
             if int(inp) == 0:
-                menu = False
-            if int(inp) > 0 and int(inp) <= len(worlds):
+                loadMenu = False
+            elif int(inp) > 0 and int(inp) <= len(worlds):
                 file = worlds[int(inp)]
-                world = World(file[0:-4])
-                menu = False
-                print("World name: " + world.name.upper())
+                world = World(file, )
+                print("World name: " + file[0:-4].upper())
+
+                #populate World with data from chosen csv
+                path = os.path.dirname(os.path.realpath(__file__)) + "\\" + file
+                reader = csv.reader(open(path,'r', newline='', encoding='utf-8-sig'))
+
+                #first row is non-repeating data [worldName, assetRow, worldTension, turnCount]
+                firstRow = 0
+                assetRow = 0 #tells the csv parser when to start making assets instead of empires
+                try:
+                    firstRow = next(reader)
+                    world.name = firstRow[0]
+                    assetRow = int(firstRow[1])
+                    world.worldTension = int(firstRow[2])
+                    world.turnCount = int(firstRow[3])
+                #will return to main menu if file does not have this telltale header data
+                except:
+                    print("There is nothing in this file.")
+                    print()
+                    pass
+                #loads repeating data (empires and assets) into world file
+                for i, r in enumerate(reader):
+                        #populate Empires
+                        if (i < assetRow):
+                            #[name, affinities=[], strength, cunning, credits=0]
+                            world.empires.append(Empire(r[0],[], list(r[1]), list(r[2]), int(r[3])))
+                            world.empires[i].changeCredits(int(r[4]))
+                            ##TODO: load affinity array 
+                        #populate assets
+                        else:
+                            #[name, type, strength, defense, hp, cunning, upkeep, cost, importance, empireID]
+                            currAsset = Asset(r[0], r[1], int(r[2]), int(r[3]), int(r[4]), int(r[5]), int(r[6]), int(r[7]), int(r[8]), int(r[9]))
+                            world.empires[int(r[9])].addAsset(currAsset)
+                            world.assets.append(currAsset)
+                            print(world.empires[int(r[9])].getAssetSummaryString())
+
+                loadMenu = False
             else:
                 print("Please enter valid input.")
         except:
             print("Please enter valid input.")
             pass
 
-    #populate World with data from chosen csv
-    path = os.path.dirname(os.path.realpath(__file__)) + "\\" + file
-    reader = csv.reader(open(path, newline='', encoding='utf-8-sig'))
-
-    #first row is non-repeating data [worldName, assetRow, worldTension, turnCount]
-    firstRow = 0
-    assetRow = 0 #tells the csv parser when to start making assets instead of empires
-    try:
-        firstRow = next(reader)
-        world.name = firstRow[0]
-        assetRow = int(firstRow[1])
-        world.worldTension = int(firstRow[2])
-        world.turnCount = int(firstRow[3])
-    #will return to main menu if file does not have this telltale header data
-    except:
-        print("There is nothing in this file.")
-        print()
-        pass
-    #loads repeating data (empires and assets) into world file
-    for i, r in enumerate(reader):
-            #populate Empires
-            if (i < assetRow):
-                #[name, affinities=[], strength, cunning, credits=0]
-                world.empires.append(Empire(r[0],[], int(r[1]), int(r[2]), int(r[3])))
-                world.empires[i].changeCredits(int(r[4]))
-                ##TODO: load affinity array 
-            #populate assets
-            else:
-                #[name, type, strength, defense, hp, cunning, upkeep, cost, importance, empireID]
-                world.empires[int(r[9])].addAsset(Asset(r[0], r[1], int(r[2]), int(r[3]), int(r[4]), int(r[5]), int(r[6]), int(r[7]), int(r[8]), int(r[9])))
-                print(world.empires[int(r[9])].getAssetSummaryString())
+        
    
+def saveWorld(fileName = "default"):
+    global path
+    global world
+    global file
+    if fileName != "default":
+        path = path[0: -1 * len(file)] + fileName + ".csv"
+    file = open(path, 'w', newline='') #'w' opens the file in write mode; newline configuration replaces default end-of-line functionality which adds an extra, unecessary line to csv
+    writer = csv.writer(file)
+    writer.writerow([world.name, len(world.empires), world.worldTension, world.turnCount])
+    for e in world.empires:
+        writer.writerow([e.name, e.affinities, e.strength, e.cunning, e.credits])
+    for a in world.assets:
+        writer.writerow([a.name, a.type, a.strength, a.defense, a.hp, a.cunning, a.upkeep, a.cost, a.importance, a.empireID])
 
 menu = True
 while(menu):
@@ -200,4 +224,5 @@ while(menu):
         sys.exit()
     else:
         print("Invalid input.")
-
+world.empires.append(Empire("Dethori Dominion",[],[],17,17,17))
+saveWorld("Deltha2")
